@@ -120,8 +120,19 @@ public:
 				}
 			}
 		}
-	}
 
+		set<int> tempTree;
+		vector<set<int>::iterator> tempSeq;
+		for (size_t i = 0; i < seq.size(); ++i) {
+
+			tempTree.insert(*seq.at(i));
+			tempSeq.push_back(tempTree.find(*seq.at(i)));
+		}
+
+
+		swap(tempTree, tree);
+		swap(tempSeq, seq);
+	}
 
 };
 
