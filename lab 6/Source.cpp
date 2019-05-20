@@ -10,8 +10,8 @@
 using namespace std;
 
 
-const size_t SIZE = 2; // Мощность размещаемого в структурах множества
-const size_t COUNT = 4; // Максимальное количество элементов в множествах
+const size_t SIZE = 4; // Мощность размещаемого в структурах множества
+const size_t COUNT = 5; // Максимальное количество элементов в множествах
 
 
 // Класс для работы с последовательностями
@@ -69,22 +69,25 @@ public:
 	// Исключение из последовательности подпоследовательности с индекса left до right
 	void erase(size_t left, size_t right) {
 
-		set<int> tempSet;
-		vector<set<int>::iterator> tempSeq;
+		if (left <= right) {
 
-		for (size_t i = 0; i < seq.size(); ++i) {
+			set<int> tempSet;
+			vector<set<int>::iterator> tempSeq;
 
-			if (!(i >= left && i <= right)) {
+			for (size_t i = 0; i < seq.size(); ++i) {
 
-				tempSet.insert(*seq[i]);
-				tempSeq.push_back(tempSet.find(*seq[i]));
+				if (!(i >= left && i <= right)) {
+
+					tempSet.insert(*seq[i]);
+					tempSeq.push_back(tempSet.find(*seq[i]));
+				}
 			}
+
+			swap(tempSet, tree);
+			swap(tempSeq, seq);
+
+			treeRestart();
 		}
-
-		swap(tempSet, tree);
-		swap(tempSeq, seq);
-
-		treeRestart();
 	}
 
 
@@ -226,8 +229,8 @@ int main()
 	size_t left, right; // Границы для операции erase
 	size_t count;
 
-	left = 2;
-	right = 25;
+	left = 0;
+	right = 2;
 	count = 1;
 
 
@@ -246,6 +249,8 @@ int main()
 	S2.erase(left, right);
 	cout << "new S2: ";
 	S2.print();
+	cout << "new Tree S2: ";
+	print(S2.tree);
 
 
 	// MUL
@@ -255,6 +260,8 @@ int main()
 	S1.mul(count);
 	cout << "new S1: ";
 	S1.print();
+	cout << "new Tree S1: ";
+	print(S1.tree);
 
 
 	// EXCL
@@ -266,6 +273,8 @@ int main()
 	S1.excl(S2);
 	cout << "new S1: ";
 	S1.print();
+	cout << "new Tree S1: ";
+	print(S1.tree);
 
 	_getch();
 }
