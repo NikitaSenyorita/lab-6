@@ -49,6 +49,23 @@ public:
 	}
 
 
+	// Перезапись дерева по элементам вектора
+	void treeRestart() {
+
+		set<int> tempTree;
+		vector<set<int>::iterator> tempSeq;
+		for (size_t i = 0; i < seq.size(); ++i) {
+
+			tempTree.insert(*seq.at(i));
+			tempSeq.push_back(tempTree.find(*seq.at(i)));
+		}
+
+
+		swap(tempTree, tree);
+		swap(tempSeq, seq);
+	}
+
+
 	// Исключение из последовательности подпоследовательности с индекса left до right
 	void erase(size_t left, size_t right) {
 
@@ -66,6 +83,8 @@ public:
 
 		swap(tempSet, tree);
 		swap(tempSeq, seq);
+
+		treeRestart();
 	}
 
 
@@ -121,17 +140,7 @@ public:
 			}
 		}
 
-		set<int> tempTree;
-		vector<set<int>::iterator> tempSeq;
-		for (size_t i = 0; i < seq.size(); ++i) {
-
-			tempTree.insert(*seq.at(i));
-			tempSeq.push_back(tempTree.find(*seq.at(i)));
-		}
-
-
-		swap(tempTree, tree);
-		swap(tempSeq, seq);
+		treeRestart();
 	}
 
 };
