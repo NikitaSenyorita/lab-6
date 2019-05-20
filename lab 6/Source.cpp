@@ -109,7 +109,7 @@ public:
 					i -= j - 1;
 					j = 0;
 
-					if (seq.size() != 0)
+					if (seq.size() != 0 && i < seq.size())
 						if (*seq.at(i) == *exclSeq.seq.at(j)) {
 							++j;
 						}
