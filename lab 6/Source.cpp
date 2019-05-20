@@ -126,6 +126,7 @@ public:
 };
 
 
+// Генерация случайного дерева
 void generate(set<int> & seq) {
 	
 	for (size_t i = 0; i < COUNT; ++i) {
@@ -135,6 +136,7 @@ void generate(set<int> & seq) {
 }
 
 
+// Вывод дерева
 void print(set<int> & seq) {
 
 	for (set<int>::iterator it = seq.begin(); it != seq.end(); ++it) {
@@ -206,15 +208,18 @@ int main()
 
 	left = 2;
 	right = 25;
-	count = 0;
+	count = 1;
 
+
+	// Вывод последовательностей
 	cout << endl << endl << endl << "S1: ";
 	S1.print();
-
 	cout << "S2: ";
 	S2.print();
 
 
+	// Операции над последовательностями
+	// ERASE
 	cout << endl << endl << "erase S2 from " << left << " to " << right << ": " << endl;
 	cout << "S2: ";
 	S2.print();
@@ -223,6 +228,7 @@ int main()
 	S2.print();
 
 
+	// MUL
 	cout << endl << endl << "mul x" << count << " S1: " << endl;
 	cout << "S1: ";
 	S1.print();
@@ -231,6 +237,7 @@ int main()
 	S1.print();
 
 
+	// EXCL
 	cout << endl << endl << "excl S2 from S1: " << endl;
 	cout << "S1: ";
 	S1.print();
