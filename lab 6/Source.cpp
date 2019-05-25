@@ -11,8 +11,8 @@
 using namespace std;
 
 
-const size_t SIZE = 1; // Мощность размещаемого в структурах множества
-const size_t COUNT = 6; // Размер последовательностей
+const size_t SIZE = 3; // Мощность размещаемого в структурах множества
+const size_t COUNT = 10; // Размер последовательностей
 
 
 // Класс для работы с последовательностями
@@ -83,7 +83,10 @@ public:
 	// Исключение из последовательности подпоследовательности с индекса left до right
 	void erase(size_t left, size_t right) {
 
-		if (left <= right && right < seq.size()) {
+		if (right >= seq.size())
+			right = seq.size() - 1;
+
+		if (left <= right) {
 
 			set<int> tempSet;
 			vector<set<int>::iterator> tempSeq;
@@ -123,7 +126,7 @@ public:
 	// Исключение из последовательности всех вхождений подпоследовательности exclSeq
 	void excl(MySeq exclSeq) {
 
-		if (seq.size() >= exclSeq.seq.size()) {
+		if (seq.size() >= exclSeq.seq.size() && exclSeq.seq.size() != 0) {
 
 			int j = 0;
 
@@ -142,17 +145,8 @@ public:
 					for (int g = i; g > i - j; --g)
 						seq.erase(seq.begin() + g);
 
-					i -= j - 1;
+					i -= j;
 					j = 0;
-
-					if (seq.size() != 0 && i < seq.size())
-						if (*seq.at(i) == *exclSeq.seq.at(j)) {
-							++j;
-						}
-						else {
-							i -= j;
-							j = 0;
-						}
 				}
 			}
 		}
@@ -286,7 +280,7 @@ int main()
 	size_t count; // Количество вставок mul
 
 	left = 0;
-	right = 4;
+	right = 8;
 	count = 1;
 
 
