@@ -5,49 +5,27 @@
 #include <vector>
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 
 
 using namespace std;
 
 
-const size_t SIZE = 4; // Мощность размещаемого в структурах множества
-const size_t COUNT = 5; // Максимальное количество элементов в множествах
+const size_t SIZE = 1; // Мощность размещаемого в структурах множества
+const size_t COUNT = 6; // Размер последовательностей
 
 
 // Класс для работы с последовательностями
-class mySeq {
+class MySeq {
 
-public:
+	void seqRestart() {
 
-	vector<set<int>::iterator> seq;
-	set<int> tree;
+		seq.clear();
 
+		for (set<int>::iterator it = tree.begin(); it != tree.end(); ++it)
+			seq.push_back(it);
 
-	// Конструктор с генерацией последовательности
-	mySeq() {
-
-		for (size_t i = 0; i < COUNT; ++i) {
-
-			int temp = rand() % SIZE + 1;
-
-			tree.insert(temp);
-
-			seq.push_back(tree.find(temp));
-		}
 	}
-
-
-	// Вывод последовательности
-	void print() {
-
-		for (size_t i = 0; i < seq.size(); ++i) {
-
-			cout << *seq[i] << " ";
-		}
-
-		cout << endl;
-	}
-
 
 	// Перезапись дерева по элементам вектора
 	void treeRestart() {
@@ -65,11 +43,47 @@ public:
 		swap(tempSeq, seq);
 	}
 
+public:
+
+	vector<set<int>::iterator> seq;
+	set<int> tree;
+
+
+	// Конструктор с генерацией последовательности
+	MySeq() {
+
+		for (size_t i = 0; i < COUNT; ++i) {
+
+			int temp = rand() % SIZE + 1;
+
+			tree.insert(temp);
+
+			seq.push_back(tree.find(temp));
+		}
+	}
+
+
+	// Вывод последовательности
+	void print() {
+
+		cout << "Tree [" << tree.size() << "] :\t";
+
+		for (set<int>::iterator it = tree.begin(); it != tree.end(); ++it)
+			cout << setw(5) << *it;
+
+		cout << "\nSeq [" << seq.size() << "] :\t";
+
+		for (size_t i = 0; i < seq.size(); ++i)
+			cout << setw(5) << *seq[i];
+
+		cout << endl;
+	}
+
 
 	// Исключение из последовательности подпоследовательности с индекса left до right
 	void erase(size_t left, size_t right) {
 
-		if (left <= right) {
+		if (left <= right && right < seq.size()) {
 
 			set<int> tempSet;
 			vector<set<int>::iterator> tempSeq;
@@ -107,7 +121,7 @@ public:
 
 
 	// Исключение из последовательности всех вхождений подпоследовательности exclSeq
-	void excl(mySeq exclSeq) {
+	void excl(MySeq exclSeq) {
 
 		if (seq.size() >= exclSeq.seq.size()) {
 
@@ -146,135 +160,172 @@ public:
 		treeRestart();
 	}
 
+
+	// Пересечение множеств
+	MySeq & operator & (const MySeq & Seq) {
+
+		MySeq * result = new MySeq;
+		result->seq.clear();
+		result->tree.clear();
+
+		set_intersection(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+
+		result->seqRestart();
+
+		return *result;
+	}
+
+
+	// Объединение множеств
+	MySeq & operator | (const MySeq & Seq) {
+
+		MySeq * result = new MySeq;
+		result->seq.clear();
+		result->tree.clear();
+
+		set_union(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+
+		result->seqRestart();
+
+		return *result;
+	}
+
+
+	// Разность множеств
+	MySeq & operator / (const MySeq & Seq) {
+
+		MySeq * result = new MySeq;
+		result->seq.clear();
+		result->tree.clear();
+
+		set_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+
+		result->seqRestart();
+
+		return *result;
+	}
+
+
+	// Симметрическая разность множеств
+	MySeq & operator ^ (const MySeq & Seq) {
+
+		MySeq * result = new MySeq;
+		result->seq.clear();
+		result->tree.clear();
+
+		set_symmetric_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+
+		result->seqRestart();
+
+		return *result;
+	}
+
+
+	// Оператор присваивания
+	MySeq & operator = (const MySeq & Seq) {
+
+		tree.clear();
+		seq.clear();
+
+		for (size_t i = 0; i < Seq.seq.size(); ++i) {
+
+			tree.insert(*Seq.seq.at(i));
+			seq.push_back(tree.find(*Seq.seq.at(i)));
+		}
+
+		return *this;
+	}
 };
-
-
-// Генерация случайного дерева
-void generate(set<int> & seq) {
-	
-	for (size_t i = 0; i < COUNT; ++i) {
-
-		seq.insert(rand() % SIZE + 1);
-	}
-}
-
-
-// Вывод дерева
-void print(set<int> & seq) {
-
-	for (set<int>::iterator it = seq.begin(); it != seq.end(); ++it) {
-
-		cout << (*it) << " ";
-	}
-
-	cout << endl;
-}
 
 
 int main()
 {
 	srand(time(0));
 
-
 	//............................................................РЕШЕНИЕ ЦЕПОЧКИ ОПЕРАЦИЙ НАД МНОЖЕСТВАМИ
-	set<int> A, B, C, D, E, temp1, temp2, temp3, result;
-
-
-	// Генерация множеств
-	generate(A);
-	generate(B);
-	generate(C);
-	generate(D);
-	generate(E);
-
+	MySeq A, B, C, D, E, Temp1, Temp2, Temp3, Result;
 
 	// Вывод множеств
-	cout << "A: ";
-	print(A);
+	cout << "A: \n";
+	A.print();
 
-	cout << "B: ";
-	print(B);
+	cout << "\nB: \n";
+	B.print();
 
-	cout << "C: ";
-	print(C);
+	cout << "\nC: \n";
+	C.print();
 
-	cout << "D: ";
-	print(D);
+	cout << "\nD: \n";
+	D.print();
 
-	cout << "E: ";
-	print(E);
+	cout << "\nE: \n";
+	E.print();
 
 
 	// Вывод промежуточных значений и результата цепочки операций
-	cout << endl << "A or B XOR (C and D dif E)" << endl;
-	set_union(A.begin(), A.end(), B.begin(), B.end(), inserter(temp1, temp1.begin()));
-	cout << endl << "A or B: " << endl;
-	print(temp1);
+	cout << "\nA or B: \n";
+	Temp1 = A | B;
+	Temp1.print();
 
-	set_intersection(C.begin(), C.end(), D.begin(), D.end(), inserter(temp2, temp2.begin()));
-	cout << endl << "C and D: " << endl;
-	print(temp2);
+	cout << "\nC and D: \n";
+	Temp2 = C & D;
+	Temp2.print();
 
-	set_difference(temp2.begin(), temp2.end(), E.begin(), E.end(), inserter(temp3, temp3.begin()));
-	cout << endl << "C and D dif E: " << endl;
-	print(temp3);
+	cout << "\nC and D dif E: \n";
+	Temp3 = Temp2 / E;
+	Temp3.print();
 
-	set_symmetric_difference(temp1.begin(), temp1.end(), temp3.begin(), temp3.end(), inserter(result, result.begin()));
-	cout << endl << "result: " << endl;
-	print(result);
+	cout << "\nA or B XOR (C and D dif E): \n";
+	Result = Temp1 ^ Temp3;
+	Result.print();
 
 
 	//............................................................ДЕМОНСТРАЦИЯ РАБОТЫ С ПОСЛЕДОВАТЕЛЬНОСТЯМИ
-	mySeq S1, S2;
+	MySeq S1, S2;
 	size_t left, right; // Границы для операции erase
-	size_t count;
+	size_t count; // Количество вставок mul
 
 	left = 0;
-	right = 2;
+	right = 4;
 	count = 1;
 
 
 	// Вывод последовательностей
-	cout << endl << endl << endl << "S1: ";
+	cout << "\n---------------------------------------------------------\n\n\n";
+	cout << "S1: \n";
 	S1.print();
-	cout << "S2: ";
+	cout << "\nS2: \n";
 	S2.print();
 
 
 	// Операции над последовательностями
 	// ERASE
-	cout << endl << endl << "erase S2 from " << left << " to " << right << ": " << endl;
-	cout << "S2: ";
+	cout << "\n\nErase S2 [" << left << "; " << right << "] : \n";
+	cout << "Current S2: \n";
 	S2.print();
 	S2.erase(left, right);
-	cout << "new S2: ";
+	cout << "New S2: \n";
 	S2.print();
-	cout << "new Tree S2: ";
-	print(S2.tree);
 
 
 	// MUL
-	cout << endl << endl << "mul x" << count << " S1: " << endl;
-	cout << "S1: ";
+	cout << "\n\nMul(" << count << ") S1: \n";
+	cout << "Current S1: \n";
 	S1.print();
 	S1.mul(count);
-	cout << "new S1: ";
+	cout << "New S1: \n";
 	S1.print();
-	cout << "new Tree S1: ";
-	print(S1.tree);
 
 
 	// EXCL
-	cout << endl << endl << "excl S2 from S1: " << endl;
-	cout << "S1: ";
+	cout << "\n\nExcl S2 from S1: \n";
+	cout << "Current S1: \n";
 	S1.print();
-	cout << "S2: ";
+	cout << "Current S2: \n";
 	S2.print();
 	S1.excl(S2);
-	cout << "new S1: ";
+	cout << "New S1: \n";
 	S1.print();
-	cout << "new Tree S1: ";
-	print(S1.tree);
 
 	_getch();
 }
