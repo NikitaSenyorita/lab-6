@@ -12,7 +12,7 @@ using namespace std;
 
 
 const size_t SIZE = 3; // Мощность размещаемого в структурах множества
-const size_t COUNT = 10; // Размер последовательностей
+const size_t COUNT = 7; // Размер последовательностей
 
 
 // Класс для работы с последовательностями
@@ -280,7 +280,7 @@ int main()
 	size_t count; // Количество вставок mul
 
 	left = 0;
-	right = 8;
+	right = 5;
 	count = 1;
 
 
