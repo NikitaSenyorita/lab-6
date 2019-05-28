@@ -63,6 +63,15 @@ public:
 	}
 
 
+	// Конструктор копирования
+	MySeq(const MySeq & Seq) {
+
+		for (size_t i = 0; i < Seq.seq.size(); ++i)
+			tree.insert(*Seq.seq.at(i));
+
+		seqRestart();
+	}
+
 	// Вывод последовательности
 	void print() {
 
@@ -156,62 +165,62 @@ public:
 
 
 	// Пересечение множеств
-	MySeq & operator & (const MySeq & Seq) {
+	MySeq operator & (const MySeq & Seq) {
 
-		MySeq * result = new MySeq;
-		result->seq.clear();
-		result->tree.clear();
+		MySeq result = MySeq();
+		result.seq.clear();
+		result.tree.clear();
 
-		set_intersection(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+		set_intersection(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result.tree, result.tree.begin()));
 
-		result->seqRestart();
+		result.seqRestart();
 
-		return *result;
+		return MySeq(result);
 	}
 
 
 	// Объединение множеств
-	MySeq & operator | (const MySeq & Seq) {
+	MySeq operator | (const MySeq & Seq) {
 
-		MySeq * result = new MySeq;
-		result->seq.clear();
-		result->tree.clear();
+		MySeq result = MySeq();
+		result.seq.clear();
+		result.tree.clear();
 
-		set_union(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+		set_union(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result.tree, result.tree.begin()));
 
-		result->seqRestart();
+		result.seqRestart();
 
-		return *result;
+		return MySeq(result);
 	}
 
 
 	// Разность множеств
-	MySeq & operator / (const MySeq & Seq) {
+	MySeq operator / (const MySeq & Seq) {
 
-		MySeq * result = new MySeq;
-		result->seq.clear();
-		result->tree.clear();
+		MySeq result = MySeq();
+		result.seq.clear();
+		result.tree.clear();
 
-		set_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+		set_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result.tree, result.tree.begin()));
 
-		result->seqRestart();
+		result.seqRestart();
 
-		return *result;
+		return MySeq(result);
 	}
 
 
 	// Симметрическая разность множеств
-	MySeq & operator ^ (const MySeq & Seq) {
+	MySeq operator ^ (const MySeq & Seq) {
 
-		MySeq * result = new MySeq;
-		result->seq.clear();
-		result->tree.clear();
+		MySeq result = MySeq();
+		result.seq.clear();
+		result.tree.clear();
 
-		set_symmetric_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result->tree, result->tree.begin()));
+		set_symmetric_difference(tree.begin(), tree.end(), Seq.tree.begin(), Seq.tree.end(), inserter(result.tree, result.tree.begin()));
 
-		result->seqRestart();
+		result.seqRestart();
 
-		return *result;
+		return MySeq(result);
 	}
 
 
