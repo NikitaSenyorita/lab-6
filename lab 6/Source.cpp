@@ -13,7 +13,7 @@
 using namespace std;
 
 
-size_t SIZE = 40; // Мощность размещаемого в структурах множества
+const size_t SIZE = 300; // Мощность размещаемого в структурах множества
 size_t N = 10; // Мощность генерируемых множеств
 
 
@@ -284,7 +284,7 @@ int main()
 
 	output << G - 10 << endl;
 
-	for (N = 10; N < G; ++N, ++SIZE) {
+	for (N = 10; N < G; ++N) {
 
 		left = 0;
 		right = N / 2;
