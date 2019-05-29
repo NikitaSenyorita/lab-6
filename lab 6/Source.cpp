@@ -282,7 +282,7 @@ int main()
 
 	ofstream output("output.txt");
 
-	output << G << endl;
+	output << G - 10 << endl;
 
 	for (size_t N = 10; N < G; ++N, ++SIZE) {
 
