@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 
 using namespace std;
@@ -272,17 +273,24 @@ int main()
 	MySeq S1, S2;
 	size_t left, right; // Границы для операции erase
 	size_t count; // Количество вставок mul
+	size_t G = 201; // Количество генераций
 
 	left = 0;
 	right = 5;
 	count = 1;
 
-	for (size_t N = 10; N < 200; ++N, ++SIZE) {
+	ofstream output("output.txt");
+
+	output << G << endl;
+
+	for (size_t N = 10; N < G; ++N, ++SIZE) {
 
 		left = 0;
 		right = N / 2;
 
 		cout << N << " ";
+
+		output << N << " xFAADE";
 
 		A.regenerate();
 		B.regenerate();
@@ -295,11 +303,15 @@ int main()
 		// Цепочка операций над множествами
 		Result = (A | B) ^ ((C & D) / E);
 
+		output << endl;
+
 		// Цепочка операций над последовательностями
 		S2.erase(left, right);
 		S1.mul(count);
 		S1.excl(S2);
 	}
+
+	output.close();
 
 	_getch();
 }
