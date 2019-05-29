@@ -286,11 +286,10 @@ int main()
 
 	for (size_t N = 10; N < G; ++N, ++SIZE) {
 
-		std::chrono::high_resolution_clock::time_point t1 =
-			std::chrono::high_resolution_clock::now();
-
 		left = 0;
 		right = N / 2;
+
+		cout << N << " ";
 		
 		A.regenerate();
 		B.regenerate();
@@ -299,6 +298,9 @@ int main()
 		E.regenerate();
 		S1.regenerate();
 		S2.regenerate();
+
+		std::chrono::high_resolution_clock::time_point t1 =
+			std::chrono::high_resolution_clock::now();
 
 		// Цепочка операций над множествами
 		Result = (A | B) ^ ((C & D) / E);
@@ -311,7 +313,7 @@ int main()
 		chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
 		auto dt = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
 
-		output << N << (dt.count());
+		output << N << ' ' << (dt.count())<< endl ;
 	}
 
 	output.close();
