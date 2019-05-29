@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <chrono>
 
 
 using namespace std;
@@ -247,42 +248,6 @@ int main()
 
 	//............................................................РЕШЕНИЕ ЦЕПОЧКИ ОПЕРАЦИЙ НАД МНОЖЕСТВАМИ
 	MySeq A, B, C, D, E, Temp1, Temp2, Temp3, Result;
-
-	// Вывод множеств
-	cout << "A: \n";
-	A.print();
-
-	cout << "\nB: \n";
-	B.print();
-
-	cout << "\nC: \n";
-	C.print();
-
-	cout << "\nD: \n";
-	D.print();
-
-	cout << "\nE: \n";
-	E.print();
-
-
-	// Вывод промежуточных значений и результата цепочки операций
-	cout << "\nA or B: \n";
-	Temp1 = A | B;
-	Temp1.print();
-
-	cout << "\nC and D: \n";
-	Temp2 = C & D;
-	Temp2.print();
-
-	cout << "\nC and D dif E: \n";
-	Temp3 = Temp2 / E;
-	Temp3.print();
-
-	cout << "\nA or B XOR (C and D dif E): \n";
-	Result = Temp1 ^ Temp3;
-	Result.print();
-
-
 	//............................................................ДЕМОНСТРАЦИЯ РАБОТЫ С ПОСЛЕДОВАТЕЛЬНОСТЯМИ
 	MySeq S1, S2;
 	size_t left, right; // Границы для операции erase
@@ -293,42 +258,34 @@ int main()
 	count = 1;
 
 
-	// Вывод последовательностей
-	cout << "\n---------------------------------------------------------\n\n\n";
-	cout << "S1: \n";
-	S1.print();
-	cout << "\nS2: \n";
-	S2.print();
+	// Вывод промежуточных значений и результата цепочки операций
+	std::chrono::high_resolution_clock::time_point t1 =
+		std::chrono::high_resolution_clock::now();
+	Temp1 = A | B;
 
+	Temp2 = C & D;
+
+	Temp3 = Temp2 / E;
+
+	Result = Temp1 ^ Temp3;
 
 	// Операции над последовательностями
 	// ERASE
-	cout << "\n\nErase S2 [" << left << "; " << right << "] : \n";
-	cout << "Current S2: \n";
-	S2.print();
 	S2.erase(left, right);
-	cout << "New S2: \n";
-	S2.print();
 
 
 	// MUL
-	cout << "\n\nMul(" << count << ") S1: \n";
-	cout << "Current S1: \n";
-	S1.print();
 	S1.mul(count);
-	cout << "New S1: \n";
-	S1.print();
 
 
 	// EXCL
-	cout << "\n\nExcl S2 from S1: \n";
-	cout << "Current S1: \n";
-	S1.print();
-	cout << "Current S2: \n";
-	S2.print();
 	S1.excl(S2);
-	cout << "New S1: \n";
-	S1.print();
+
+	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+	auto dt = duration_cast<duration<double>>(t2 - t1);
+	middle_power /= set_count;
+	cout << "\n=== Конец === (" << p << " : " << set_count << " * " <<
+		middle_power << " DT=" << (dt.count()) << ")\n";
 
 	_getch();
 }
