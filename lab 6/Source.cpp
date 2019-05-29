@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <chrono>
 
 
 using namespace std;
@@ -285,13 +286,12 @@ int main()
 
 	for (size_t N = 10; N < G; ++N, ++SIZE) {
 
+		std::chrono::high_resolution_clock::time_point t1 =
+			std::chrono::high_resolution_clock::now();
+
 		left = 0;
 		right = N / 2;
-
-		cout << N << " ";
-
-		output << N << " xFAADE";
-
+		
 		A.regenerate();
 		B.regenerate();
 		C.regenerate();
@@ -303,12 +303,15 @@ int main()
 		// Цепочка операций над множествами
 		Result = (A | B) ^ ((C & D) / E);
 
-		output << endl;
-
 		// Цепочка операций над последовательностями
 		S2.erase(left, right);
 		S1.mul(count);
 		S1.excl(S2);
+
+		chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
+		auto dt = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+		output << N << (dt.count());
 	}
 
 	output.close();
