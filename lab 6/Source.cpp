@@ -20,6 +20,9 @@ size_t N = 10; // Мощность генерируемых множеств
 // Класс для работы с последовательностями
 class MySeq {
 
+	vector<set<int>::iterator> seq;
+	set<int> tree;
+
 	void seqRestart() {
 
 		seq.clear();
@@ -46,11 +49,6 @@ class MySeq {
 	}
 
 public:
-
-	vector<set<int>::iterator> seq;
-	set<int> tree;
-
-
 	// Конструктор с генерацией последовательности
 	MySeq() {
 
@@ -268,52 +266,61 @@ public:
 int main()
 {
 	srand(time(0));
-
-	//............................................................РЕШЕНИЕ ЦЕПОЧКИ ОПЕРАЦИЙ НАД МНОЖЕСТВАМИ
-	MySeq A, B, C, D, E, Result;
-	MySeq S1, S2;
-	size_t left, right; // Границы для операции erase
-	size_t count; // Количество вставок mul
-	size_t G = 201; // Количество генераций
-
-	left = 0;
-	right = 5;
-	count = 1;
-
 	ofstream output("output.txt");
 
-	output << G - 10 << endl;
-
-	for (N = 10; N < G; ++N) {
+	//............................................................РЕШЕНИЕ ЦЕПОЧКИ ОПЕРАЦИЙ НАД МНОЖЕСТВАМИ
+	try {
+		MySeq A, B, C, D, E, Result;
+		MySeq S1, S2;
+		size_t left, right; // Границы для операции erase
+		size_t count; // Количество вставок mul
+		size_t G = 201; // Количество генераций
 
 		left = 0;
-		right = N / 2;
+		right = 5;
+		count = 1;
 
-		cout << N << " ";
-		
-		A.regenerate();
-		B.regenerate();
-		C.regenerate();
-		D.regenerate();
-		E.regenerate();
-		S1.regenerate();
-		S2.regenerate();
+		output << G - 10 << endl;
+		for (N = 10; N < G; ++N) {
 
-		std::chrono::high_resolution_clock::time_point t1 =
-			std::chrono::high_resolution_clock::now();
+			left = 0;
+			right = N / 2;
 
-		// Цепочка операций над множествами
-		Result = (A | B) ^ ((C & D) / E);
+			cout << N << " ";
 
-		// Цепочка операций над последовательностями
-		S2.erase(left, right);
-		S1.mul(count);
-		S1.excl(S2);
+			try {
+				A.regenerate();
+				B.regenerate();
+				C.regenerate();
+				D.regenerate();
+				E.regenerate();
+				S1.regenerate();
+				S2.regenerate();
 
-		chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
-		auto dt = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+				std::chrono::high_resolution_clock::time_point t1 =
+					std::chrono::high_resolution_clock::now();
 
-		output << N << ' ' << (dt.count())<< endl ;
+				// Цепочка операций над множествами
+				Result = (A | B) ^ ((C & D) / E);
+
+				// Цепочка операций над последовательностями
+				S2.erase(left, right);
+				S1.mul(count);
+				S1.excl(S2);
+
+				chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
+				auto dt = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+				output << N << ' ' << (dt.count()) << endl;
+			}
+			catch (const std::bad_alloc& er) {
+				cout << "Error! Step " << N << " crashed. Skipped.\n" << er.what() << "\n";
+			}
+		}
+	}
+	catch (const std::bad_alloc& er) {
+		cout << "Error! First step crashed.\n" << er.what() << "\n";
+		output.close();
 	}
 
 	output.close();
