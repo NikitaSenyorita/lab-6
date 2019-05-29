@@ -283,9 +283,7 @@ int main()
 
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 	auto dt = duration_cast<duration<double>>(t2 - t1);
-	middle_power /= set_count;
-	cout << "\n=== Конец === (" << p << " : " << set_count << " * " <<
-		middle_power << " DT=" << (dt.count()) << ")\n";
+	cout << "\n=== Конец === (" DT=" << (dt.count()) << ")\n";
 
 	_getch();
 }
