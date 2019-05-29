@@ -289,6 +289,8 @@ int main()
 		C.regenerate();
 		D.regenerate();
 		E.regenerate();
+		S1.regenerate();
+		S2.regenerate();
 
 		// Цепочка операций над множествами
 		Result = (A | B) ^ ((C & D) / E);
