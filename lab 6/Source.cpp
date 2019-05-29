@@ -11,8 +11,8 @@
 using namespace std;
 
 
-const size_t SIZE = 3; // Мощность размещаемого в структурах множества
-const size_t COUNT = 7; // Размер последовательностей
+size_t SIZE = 40; // Мощность размещаемого в структурах множества
+size_t N = 10; // Мощность генерируемых множеств
 
 
 // Класс для работы с последовательностями
@@ -52,13 +52,15 @@ public:
 	// Конструктор с генерацией последовательности
 	MySeq() {
 
-		for (size_t i = 0; i < COUNT; ++i) {
+		std::pair<set<int>::iterator, bool> tempPair;
 
-			int temp = rand() % SIZE + 1;
+		for (size_t i = 0; i < N;) {
 
-			tree.insert(temp);
+			tempPair = tree.insert(rand() % SIZE + 1);
 
-			seq.push_back(tree.find(temp));
+			if (tempPair.second)
+				++i;
+			seq.push_back(tempPair.first);
 		}
 	}
 
@@ -71,6 +73,26 @@ public:
 
 		seqRestart();
 	}
+
+
+	// Перегенерация множества
+	void regenerate() {
+
+		seq.clear();
+		tree.clear();
+
+		std::pair<set<int>::iterator, bool> tempPair;
+
+		for (size_t i = 0; i < N;) {
+
+			tempPair = tree.insert(rand() % SIZE + 1);
+
+			if (tempPair.second)
+				++i;
+			seq.push_back(tempPair.first);
+		}
+	}
+
 
 	// Вывод последовательности
 	void print() {
@@ -246,44 +268,7 @@ int main()
 	srand(time(0));
 
 	//............................................................РЕШЕНИЕ ЦЕПОЧКИ ОПЕРАЦИЙ НАД МНОЖЕСТВАМИ
-	MySeq A, B, C, D, E, Temp1, Temp2, Temp3, Result;
-
-	// Вывод множеств
-	cout << "A: \n";
-	A.print();
-
-	cout << "\nB: \n";
-	B.print();
-
-	cout << "\nC: \n";
-	C.print();
-
-	cout << "\nD: \n";
-	D.print();
-
-	cout << "\nE: \n";
-	E.print();
-
-
-	// Вывод промежуточных значений и результата цепочки операций
-	cout << "\nA or B: \n";
-	Temp1 = A | B;
-	Temp1.print();
-
-	cout << "\nC and D: \n";
-	Temp2 = C & D;
-	Temp2.print();
-
-	cout << "\nC and D dif E: \n";
-	Temp3 = Temp2 / E;
-	Temp3.print();
-
-	cout << "\nA or B XOR (C and D dif E): \n";
-	Result = Temp1 ^ Temp3;
-	Result.print();
-
-
-	//............................................................ДЕМОНСТРАЦИЯ РАБОТЫ С ПОСЛЕДОВАТЕЛЬНОСТЯМИ
+	MySeq A, B, C, D, E, Result;
 	MySeq S1, S2;
 	size_t left, right; // Границы для операции erase
 	size_t count; // Количество вставок mul
@@ -292,43 +277,27 @@ int main()
 	right = 5;
 	count = 1;
 
+	for (size_t N = 10; N < 200; ++N, ++SIZE) {
 
-	// Вывод последовательностей
-	cout << "\n---------------------------------------------------------\n\n\n";
-	cout << "S1: \n";
-	S1.print();
-	cout << "\nS2: \n";
-	S2.print();
+		left = 0;
+		right = N / 2;
 
+		cout << N << " ";
 
-	// Операции над последовательностями
-	// ERASE
-	cout << "\n\nErase S2 [" << left << "; " << right << "] : \n";
-	cout << "Current S2: \n";
-	S2.print();
-	S2.erase(left, right);
-	cout << "New S2: \n";
-	S2.print();
+		A.regenerate();
+		B.regenerate();
+		C.regenerate();
+		D.regenerate();
+		E.regenerate();
 
+		// Цепочка операций над множествами
+		Result = (A | B) ^ ((C & D) / E);
 
-	// MUL
-	cout << "\n\nMul(" << count << ") S1: \n";
-	cout << "Current S1: \n";
-	S1.print();
-	S1.mul(count);
-	cout << "New S1: \n";
-	S1.print();
-
-
-	// EXCL
-	cout << "\n\nExcl S2 from S1: \n";
-	cout << "Current S1: \n";
-	S1.print();
-	cout << "Current S2: \n";
-	S2.print();
-	S1.excl(S2);
-	cout << "New S1: \n";
-	S1.print();
+		// Цепочка операций над последовательностями
+		S2.erase(left, right);
+		S1.mul(count);
+		S1.excl(S2);
+	}
 
 	_getch();
 }
